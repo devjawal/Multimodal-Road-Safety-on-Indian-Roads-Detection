@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Hazard Detection System</title>
+    <!-- Link to the new external CSS file -->
+    <link rel="stylesheet" href="../static/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI Road Hazard Detection</h1>
+            <p>Upload an image and enter sensor data to get a real-time hazard analysis.</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Form for user input -->
+            <form action="/" method="post" enctype="multipart/form-data">
+                <div class="form-grid">
+                    <!-- Image Upload Section -->
+                    <div class="upload-area">
+                        <label for="image" class="upload-label">
+                             <svg class="upload-icon" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <span>Click to upload an image</span>
+                        </label>
+                        <input id="image" name="image" type="file" class="file-input" required>
+                    </div>
+
+                    <!-- Sensor Data Section -->
+                    <div class="sensor-inputs">
+                        <h3>Sensor Readings</h3>
+                        <div class="sensor-grid">
+                            <div>
+                                <label for="speed">Speed (km/h)</label>
+                                <input type="number" step="0.1" name="speed" id="speed" required>
+                            </div>
+                            <div>
+                                <label for="acceleration">Acceleration (m/s²)</label>
+                                <input type="number" step="0.1" name="acceleration" id="acceleration" required>
+                            </div>
+                            <div>
+                                <label for="vibration">Vibration (Hz)</label>
+                                <input type="number" step="0.1" name="vibration" id="vibration" required>
+                            </div>
+                            <div>
+                                <label for="temperature">Temperature (°C)</label>
+                                <input type="number" step="0.1" name="temperature" id="temperature" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="submit-container">
+                    <button type="submit" class="submit-btn">
+                        Analyze Hazard
+                    </button>
+                </div>
+            </form>
+        </main>
+        
+        <!-- Results Section (only shows if a result is available) -->
+        {% if result %}
+        <section class="results-section">
+            <h2>Analysis Result</h2>
+            <div class="results-grid">
+                <!-- Display Uploaded Image -->
+                <div class="image-preview">
+                     <img src="{{ url_for('static', filename='uploads/' + image_file) }}" alt="Uploaded Hazard Image">
+                </div>
+                <!-- Display Prediction -->
+                <div class="prediction-details">
+                    <h3 class="{% if 'ALERT' in result %}result-alert{% else %}result-clear{% endif %}">
+                        {{ result }}
+                    </h3>
+                    <div class="details-box">
+                        <p><strong>Vision Model Output:</strong> {{ details.vision_hazard }} ({{ details.vision_confidence }})</p>
+                        <p><strong>Sensor Model Output:</strong> {{ details.sensor_hazard }} ({{ details.sensor_confidence }})</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+    </div>
+</body>
+</html>
+
